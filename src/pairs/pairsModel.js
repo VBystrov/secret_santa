@@ -22,7 +22,6 @@ class PairsSchema {
             if (!err) {
               const recipients = shuffleArray(rows.map(({ userid }) => userid));
               const pairs = [];
-
               pairs.push(
                 ` (${recipients[recipients.length - 1]}, ${recipients[0]})`
               );
@@ -36,16 +35,16 @@ class PairsSchema {
                   if (!err) {
                     callback({ status: 'Success. Pairs shuffled.' });
                   } else {
-                    callback({ status: 'Error. Cannot insert pairs.', err });
+                    callback({ err });
                   }
                 }
               );
             } else {
-              callback({ status: 'Error. Cannot get users ID.', err });
+              callback({ err });
             }
           });
         } else {
-          callback({ status: 'Error. Pairs already shuffled.', err });
+          callback({ err });
         }
       }
     );
@@ -57,18 +56,18 @@ class PairsSchema {
       `SELECT first_name,last_name,wish_text,wish_number FROM Wishes LEFT JOIN Users ON Users.userid=Wishes.userid WHERE Users.userid=(SELECT recipient FROM Pairs  WHERE sender=${senderid})`,
       (err, rows) => {
         if (err) {
-          callback({ status: 'Error. Pairs not shuffled.' });
+          callback({ err: 'Error. Pairs not shuffled yet.' });
           return;
         }
-        if (!rows) {
-          callback({ status: 'Error. Requested id not found.' });
+        if (!rows.length) {
+          callback({ err: 'Error. Requested id not found.' });
           return;
         }
-        callback({ status: 'Success.', data: rows });
+        callback({ data: rows });
       }
     );
   };
 }
 
-const userModel = new PairsSchema(santaDB);
-export default userModel;
+const pairsModel = new PairsSchema(santaDB);
+export default pairsModel;

@@ -43,8 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
       wishlist.getElementsByClassName('wish-value'),
       (wishElement) => wishElement.value
     );
-    const userid = await User.register(userData);
-    message.innerText = `Your id is ${userid}. Please remember it.`;
+    message.innerText = await User.register(userData);
   });
 
   shuffleButton.addEventListener('click', async () => {
@@ -53,11 +52,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   searchUserButton.addEventListener('click', async () => {
     const senderid = parseInt(searchUserId.value, 10);
-    const { data: recipientsData } = await Pairs.getRecipient(senderid);
-    recipientName.innerText = `${recipientsData[0].last_name} ${recipientsData[0].first_name}`;
-    const wishes = recipientsData
-      .sort((a, b) => a.wish_number - b.wish_number)
-      .map((recipient) => `<li>${recipient.wish_text} </li>`);
-    recipientWishes.innerHTML = wishes.join('');
+    const { err, firstName, lastName, wishes } = await Pairs.getRecipient(
+      senderid
+    );
+    if (err) {
+      message.innerHTML = err;
+      recipientName.innerText = '';
+      recipientWishes.innerHTML = '';
+    } else {
+      recipientName.innerText = `${firstName} ${lastName}`;
+      recipientWishes.innerHTML = wishes
+        .map((wish) => `<li>${wish} </li>`)
+        .join('');
+    }
   });
 });

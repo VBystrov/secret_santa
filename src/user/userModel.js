@@ -5,12 +5,11 @@ class UserSchema {
     this.db = db;
   }
 
-  register = function (userData, send) {
+  register = function (userData, callback) {
     const { name, surname, wishes } = userData;
     const { db } = this;
     db.run(
       `INSERT INTO Users (first_name,last_name) VALUES ('${name}', '${surname}');`,
-      [],
       function (err) {
         if (!err) {
           const userid = this.lastID;
@@ -23,7 +22,7 @@ class UserSchema {
           insertWishes += valuesWishes.join(',');
           db.run(insertWishes, function (error) {
             if (!error) {
-              send(`${userid}`);
+              callback({ userid });
             }
           });
         }

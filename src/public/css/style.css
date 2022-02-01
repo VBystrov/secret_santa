@@ -11,7 +11,7 @@ body {
   grid-template-rows: 1fr;
   column-gap: 40px;
   justify-content: center;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 .container {
@@ -21,7 +21,7 @@ body {
 .controls {
   display: flex;
   justify-content: space-around;
-  margin-top: 40px;
+  margin: 40px 0;
 }
 
 .wish-item {
@@ -39,7 +39,7 @@ body {
 }
 
 .message {
-  position: absolute;
+  position: fixed;
   bottom: 10px;
   left: 20px;
 }

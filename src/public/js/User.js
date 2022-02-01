@@ -5,17 +5,14 @@ const apiUrl = `http://localhost:5000`;
 const register = async function (userData) {
   try {
     const response = await axios.post(`${apiUrl}/user`, userData);
-
-    const userid = response.data;
-
-    return userid;
+    const { userid, err } = response.data;
+    if (err) {
+      return err;
+    }
+    return `Your id is ${userid}. Please remember it.`;
   } catch (errors) {
     return errors;
   }
 };
 
-const search = async function (userId) {
-  axios.get(`${apiUrl}/user/${userId}`);
-};
-
-export default { register, search };
+export default { register };

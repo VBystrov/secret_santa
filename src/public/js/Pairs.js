@@ -4,7 +4,11 @@ const apiUrl = `http://localhost:5000`;
 const shuffle = async function () {
   try {
     const response = await axios.post(`${apiUrl}/shuffle`);
-    return response.data.status;
+    const { err, status } = response.data;
+    if (err) {
+      return err;
+    }
+    return status;
   } catch (errors) {
     return errors;
   }
@@ -13,6 +17,12 @@ const shuffle = async function () {
 const getRecipient = async function (senderid) {
   try {
     const response = await axios.get(`${apiUrl}/pairs/${senderid}`);
+
+    const { err } = response.data;
+    if (err) {
+      return { err };
+    }
+
     return response.data;
   } catch (errors) {
     return errors;

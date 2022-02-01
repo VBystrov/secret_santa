@@ -1,5 +1,4 @@
 import express from 'express';
-// import asyncHandler from '../helpers/asyncHandler.js';
 import pairsController from './pairsController.js';
 
 const router = express.Router();
